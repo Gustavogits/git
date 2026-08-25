@@ -1,0 +1,75 @@
+1. Configurações Globais (Variáveis Globais)
+JavaScript
+var readline = require('readline-sync');
+var LINHAS = 8;
+var COLUNAS = 8;
+var BOMBAS = 10;
+var MODO = 1;
+require('readline-sync'): Importa a biblioteca para ler a digitação do jogador no terminal.
+
+Variáveis em MAIÚSCULAS: Guardam as regras que mudam durante o jogo (tamanho da grade, quantidade de bombas e o modo ativo).
+
+
+
+
+
+2. Menu de Inicialização
+JavaScript
+function escolherDificuldade() { ... }
+function escolherModoJogo() { ... }
+escolherDificuldade(): Modifica os valores das variáveis LINHAS, COLUNAS e BOMBAS. Se escolher Fácil, a grade vira 6x6; se Difícil, vira 10x10.
+
+escolherModoJogo(): Salva qual regra especial estará ativa na variável MODO. Se for o Modo 5 (Desafio de Bombas), ele altera a matemática e aumenta o total de bombas em 50% (BOMBAS * 1.5).
+
+
+
+
+
+3. Construção e População do Tabuleiro
+JavaScript
+function criarTabuleiro(valor) { ... }
+function posicionarBombas(tabuleiro, linhaInicial, colunaInicial) { ... }
+criarTabuleiro(): Usa dois laços de repetição for (um dentro do outro) para montar uma matriz — ou seja, uma lista contendo outras listas de linhas e colunas. Criamos duas matrizes:
+
+Tabuleiro Real: Onde ficam escondidas as bombas ('B').
+
+Tabuleiro Visível: O que o jogador enxerga na tela (inicia cheio de pontos '.').
+
+posicionarBombas(): Usa Math.random() para sortear posições e espalhar as bombas. No Modo 4 (Campo Livre), o código verifica se a coordenada sorteada está muito perto do primeiro clique do jogador e evita colocar bombas ali.
+
+
+
+
+
+4. Inteligência do Jogo e Desenho
+JavaScript
+function contarBombasVizinhas(tabuleiro, linha, coluna) { ... }
+function exibirTabuleiro(tabuleiroVisivel) { ... }
+contarBombasVizinhas(): Olha as 8 posições ao redor de uma célula selecionada. Ele faz um loop de -1 a 1 em linhas e colunas para somar quantas bombas existem ao redor.
+
+exibirTabuleiro(): Limpa a tela com console.clear() e desenha a grade no terminal linha por linha, incluindo os números das bordas para orientar a digitação.
+
+
+
+
+
+5. Mecânica de Revelação Recursiva (Efeito Cascata)
+JavaScript
+function revelarCelula(tabuleiroReal, tabuleiroVisivel, linha, coluna) { ... }
+Esta é a parte crucial do Campo Minado. Quando o jogador clica em uma célula vazia (que tem 0 bombas ao redor), o jogo precisa abrir todas as células vazias vizinhas automaticamente.
+
+A função chama a si mesma (conceito chamado de Recursão) para checar e abrir os vizinhos até encontrar células que tenham números.
+
+Modo 2 (Sem Dicas): Caso este modo esteja ativo, a função oculta os números e insere apenas um espaço em branco ' '.
+
+
+
+
+
+6. Condição de Vitória e o Loop Principal
+JavaScript
+function verificarVitoria(...) { ... }
+function jogar() { ... }
+verificarVitoria(): Percorre o tabuleiro inteiro. Se encontrar qualquer espaço sem bomba que ainda esteja escondido ('.'), significa que o jogo deve continuar. Se todos os espaços seguros foram abertos, retorna true.
+
+jogar(): O motor do programa. Ele executa um laço while (!gameOver) que só para quando o jogador vence ou acerta uma bomba 'B'. A cada rodada ele pede as coordenadas, valida se a jogada é válida, processa o clique (ou marcação de bandeira 'F') e atualiza a tela.
